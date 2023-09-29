@@ -1,3 +1,10 @@
+using ecommercejogos.Data;
+using ecommercejogos.Model;
+using ecommercejogos.Validator;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using ecommercejogos.Service;
+using ecommercejogos.Service.Implements;
 
 namespace ecommercejogos
 {
@@ -9,7 +16,28 @@ namespace ecommercejogos
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+              .AddNewtonsoftJson(options =>
+               {
+                   options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+               });
+
+            // Conexão com o Banco de dados
+            var connectionString = builder.Configuration.
+                    GetConnectionString("DefaultConnection");
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(connectionString)
+            );
+
+            // Validação das Entidades
+            builder.Services.AddTransient<IValidator<Categoria>, CategoriaValidator>();
+            builder.Services.AddTransient<IValidator<Produto>, ProdutoValidator>();
+
+            // Registrar as Classes e Interfaces Service
+            builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+            builder.Services.AddScoped<IProdutoService, ProdutoService>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -26,6 +54,15 @@ namespace ecommercejogos
             });
 
             var app = builder.Build();
+
+            // Criar o Banco de dados e as tabelas Automaticamente
+            using (var scope = app.Services.CreateAsyncScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                dbContext.Database.EnsureCreated();
+            }
+
+            app.UseDeveloperExceptionPage();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
