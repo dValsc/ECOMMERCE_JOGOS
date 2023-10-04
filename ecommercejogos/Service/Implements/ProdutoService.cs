@@ -92,14 +92,34 @@ namespace ecommercejogos.Service.Implements
             await _context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Produto>> GetByPriceRange(decimal min, decimal max)
+        public async Task<IEnumerable<Produto>> GetByPriceRange(decimal min, decimal max)
         {
-            throw new NotImplementedException();
+            var Produto = await _context.Produtos
+               .Include(p => p.Categoria)
+               .Where(p => p.Preco >= min && p.Preco <= max)
+               .ToListAsync();
+
+            return Produto;
         }
 
-        public Task<IEnumerable<Produto>> GetByNomeOrConsole(string nome, string console)
+        public async Task<IEnumerable<Produto>> GetByNomeOrConsole(string nome, string console)
         {
-            throw new NotImplementedException();
+            var Produto = await _context.Produtos
+                .Include(p => p.Categoria)
+                .Where(p => p.Nome.Contains(nome) || p.Console.Contains(console))
+                .ToListAsync();
+
+            return Produto;
+        }
+
+        public async Task<IEnumerable<Produto>> GetByNomeandConsole(string nome, string console)
+        {
+            var Produto = await _context.Produtos
+                .Include(p => p.Categoria)
+                .Where(p => p.Nome.Contains(nome) && p.Console.Contains(console))
+                .ToListAsync();
+
+            return Produto;
         }
     }
 }

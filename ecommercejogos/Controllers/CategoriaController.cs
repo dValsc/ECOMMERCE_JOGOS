@@ -69,7 +69,7 @@ public class CategoriaController : ControllerBase
         var categoriaUpdate = await _categoriaService.Update(categoria);
 
         if (categoriaUpdate == null)
-            return NotFound("Produto não encontrado");
+            return NotFound("categoria não encontrada");
 
         return Ok(categoriaUpdate);
     }
@@ -80,7 +80,7 @@ public class CategoriaController : ControllerBase
         var categoria = await _categoriaService.GetById(id);
 
         if (categoria == null)
-            return NotFound("Produto não encontrado");
+            return NotFound("categoria não encontrada");
 
         await _categoriaService.Delete(categoria);
         return NoContent();

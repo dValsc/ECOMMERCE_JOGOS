@@ -12,6 +12,8 @@ namespace ecommercejogos.Service
 
         Task<IEnumerable<Produto>> GetByNomeOrConsole (string nome, string console);
 
+        Task<IEnumerable<Produto>> GetByNomeandConsole(string nome, string console);
+
         Task<IEnumerable<Produto>> GetByPriceRange(decimal min, decimal max);
 
         Task<Produto?> Create(Produto produto);

@@ -30,7 +30,7 @@ public class ProdutoController : ControllerBase
         var produto = await _produtoService.GetById(id);
 
         if (produto == null)
-            return NotFound();
+            return NotFound("Produto não encontrado!");
 
         return Ok(produto);
     }
@@ -39,6 +39,24 @@ public class ProdutoController : ControllerBase
     public async Task<ActionResult> GetByNome(string nome)
     {
         return Ok(await _produtoService.GetByNome(nome));
+    }
+
+    [HttpGet("nome/{nome}/ouconsole/{console}")]
+    public async Task<ActionResult> GetByNomeOrConsole(string nome, string console)
+    {
+        return Ok(await _produtoService.GetByNomeOrConsole(nome, console));
+    }
+
+    [HttpGet("nome/{nome}/euconsole/{console}")]
+    public async Task<ActionResult> GetByNomeandConsole(string nome, string console)
+    {
+        return Ok(await _produtoService.GetByNomeandConsole(nome, console));
+    }
+
+    [HttpGet("preco_inicial/{precoInicial}/preco_final/{precoFinal}")]
+    public async Task<ActionResult> GetByPriceRange(decimal min, decimal max)
+    {
+        return Ok(await _produtoService.GetByPriceRange(min, max));
     }
 
     [HttpPost]
