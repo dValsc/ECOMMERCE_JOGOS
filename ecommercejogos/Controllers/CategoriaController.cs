@@ -1,11 +1,12 @@
 ﻿using ecommercejogos.Model;
 using ecommercejogos.Service;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ecommercejogos.Controllers;
 
-
+[Authorize]
 [Route("~/categorias")]
 [ApiController]
 
